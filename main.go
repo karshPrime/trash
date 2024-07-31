@@ -9,12 +9,13 @@ import (
 
 func main() {
 	if len(os.Args) == 1 {
-		noArgsError()
+		fmt.Println("Missing Arguments")
+		printUsage()
 		return
 	}
 
 	switch os.Args[1] {
-		case "-ls", "--list":
+		case "-l", "--list":
 			cmd.RecordPrint()
 
 		case "-r", "--restore":
@@ -23,11 +24,13 @@ func main() {
 					cmd.ActionRestore(&filePath)
 				}
 			} else {
-				noArgsError()
+				fmt.Println("Missing FileID(s)")
+				printUsage()
 			}
 
 		case "-h", "--help":
-			noArgsError()
+			fmt.Println("delete files by using system trash")
+			printUsage()
 
 		default:
 			for _, filePath := range os.Args[1:] {
@@ -35,7 +38,13 @@ func main() {
 			}
 	}
 }
-func noArgsError() {
-	fmt.Println("Usage:")
+
+func printUsage() {
+	fmt.Println("\nUSAGE:")
+	fmt.Println("    $ trash [OPTIONS] {files}")
+	fmt.Println("\nOPTIONS:")
+	fmt.Println("    -l	--list\t\tprint record of files deleted")
+	fmt.Println("    -r	--restore\tmove files back to original dir from trash")
+	fmt.Println("    -h	--help\t\tshow this help menu")
 }
 
