@@ -2,28 +2,39 @@
 package main
 
 import (
+	"os"
 	"fmt"
 	"github.com/karshPrime/trash/cmd"
 )
 
 func main() {
-	// parse user arguments
-	// comprehend action
-	// comprehend file(s) path
-	var lAllFiles []string // list of all files
+	if len(os.Args) == 1 {
+		noArgsError()
+		return
+	}
 
-	for _, filePath := range lAllFiles {
-		// $ trash -ls
-		cmd.RecordPrint()
+	switch os.Args[1] {
+		case "-ls", "--list":
+			cmd.RecordPrint()
 
-		// $ trash -r
-		cmd.ActionRestore(&filePath)
+		case "-r", "--restore":
+			if len(os.Args) > 2 {
+				for _, filePath := range os.Args[2:] {
+					cmd.ActionRestore(&filePath)
+				}
+			} else {
+				noArgsError()
+			}
 
-		// $ trash file.eg file2.eg .....
-		cmd.ActionDelete(&filePath)
+		case "-h", "--help":
+			noArgsError()
+
+		default:
+			for _, filePath := range os.Args[1:] {
+				cmd.ActionDelete(&filePath)
+			}
 	}
 }
-
 func noArgsError() {
 	fmt.Println("Usage:")
 }
